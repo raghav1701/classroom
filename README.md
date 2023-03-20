@@ -45,7 +45,8 @@ A web application for teacher and students to engage virtually.
   ```
 - Go to [localhost:8080](http://localhost:8080/).
 
-*NOTE* : For a detailed description of the API endpoints for this project, have a look at the [README_API.md](https://github.com/DivyanshFalodiya/classroom/blob/master/README_API.md) file.
+*NOTE* : For a detailed description of the API endpoints for this project, have a look at the [README_API.md](https://github.com/raghav1701/classroom/blob/master/README_API.md) file.
+
 
 ## Hosting
 You can view the live project [here](https://fliprclassroom.herokuapp.com/)

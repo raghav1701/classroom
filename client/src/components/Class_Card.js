@@ -1,8 +1,7 @@
 import React from 'react'
 import { Card, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { MdExitToApp } from "react-icons/md";
-import { NavLink } from 'react-router-dom';
-import {Link} from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom';
 // MdExitToApp
 
 const Class_Card = (props) => {
@@ -16,39 +15,32 @@ const Class_Card = (props) => {
 
     return (
         <div className="p-4 center">
-            <Card style={{ width: '18rem', color: "black" }} className="card1">
-                <Link to={{
+            <Link to={{
                 pathname: `/class/${props.id}/stream`,
-                state: {
-                    details: {
-                        id:props.id,
-                        ClassCode: props.ClassCode,
-                        admin: props.admin,
-                        classname: props.classname,
-                        link:props.link
-                }}
+                state: {details:props}
             }} className="nav-link">
+                <Card style={{ width: '18rem', color:"black"}} className="card1">
                         <Card.Img variant="top" src="images/book1.jpg" alt="image" />
                         <Card.Body style={{textAlign:"left"}}>
                             <Card.Title className="card_title">
-                                {props.classname}
+                                {props.id}
                             </Card.Title>
                             <Card.Text>
                                 {props.code} <br/>
                                 {props.admin}
                             </Card.Text>
-                    </Card.Body>
-                    </Link>
+                        </Card.Body>
                         <Card.Footer style={{textAlign:'center'}}>
                             <OverlayTrigger
                                 placement="right"
                                 delay={{ show: 250, hide: 400 }}
-                            overlay={renderTooltip}
+                                overlay={renderTooltip}
                             >
-                                <MdExitToApp onClick={() => {props.unenroll(props.id)}} className="exit"/>
+                                <MdExitToApp className="exit"/>
                             </OverlayTrigger>
                         </Card.Footer>
                 </Card>
+            </Link>
         </div>
     )
 }

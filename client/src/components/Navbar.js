@@ -6,25 +6,10 @@ import { NavLink } from 'react-router-dom';
 
 const Navbar1 = () => {
     const [modalShow, setModalShow] = useState(false);
-  const [modalShow1, setModalShow1] = useState(false);
-  
+    const [modalShow1, setModalShow1] = useState(false);
+    
     function MyVerticallyCenteredModal(props) {
-      const [code, setCode] = useState('');
-      const [error, setError] = useState('');
-
-      const submit = async () => {
-        let res = await fetch(`/class/join/${code}`, {method: 'PATCH', headers: {
-            'Content-Type':'application/json'
-        }})
-        res = await res.json();
-        if (res.error) {
-          setError(res.error)
-        }
-        else {
-          props.onHide();
-        }
-      }
-
+        const [code,setCode] = useState('');
         return (
           <Modal
             {...props}
@@ -47,10 +32,9 @@ const Navbar1 = () => {
                 </Form.Group>
             </Form>
             </Modal.Body>
-            <p>{error}</p>
             <Modal.Footer>
               <Button variant="outline-danger" onClick={props.onHide}>Close</Button>
-              <Button variant="outline-success" onClick={submit}>Submit</Button>
+              <Button variant="outline-success" onClick={props.onHide}>Submit</Button>
             </Modal.Footer>
           </Modal>
         );
@@ -60,31 +44,7 @@ const Navbar1 = () => {
         const [name,setName] = useState('');
         const [subjectcode,setSubjectcode] = useState('');
         const [link,setLink] = useState('');
-      const [books, setBooks] = useState('');
-      const [error, setError] = useState('');
-      
-      const submit = async () => {
-        let res = await fetch('/class', {
-          method: 'POST',
-          body: JSON.stringify({
-            title: name,
-            subjectCode: subjectcode,
-            books: books.split(','),
-            link: link,
-          }),
-          headers: {
-            'Content-Type':'application/json'
-          }
-        })
-
-        res = await res.json();
-        if (res.error) {
-          setError(res.error)
-        }
-        else {
-          props.onHide();
-        }
-      }
+        const [books,setBooks] = useState('');
 
         return (
           <Modal
@@ -114,10 +74,9 @@ const Navbar1 = () => {
                 </Form.Group>
             </Form>
             </Modal.Body>
-            <p> {error} </p>
             <Modal.Footer>
               <Button variant="outline-danger" onClick={props.onHide}>Close</Button>
-              <Button variant="outline-success" onClick={submit}>Submit</Button>
+              <Button variant="outline-success" onClick={props.onHide}>Submit</Button>
             </Modal.Footer>
           </Modal>
         );

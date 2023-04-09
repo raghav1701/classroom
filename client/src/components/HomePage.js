@@ -3,12 +3,9 @@ import { UserContext } from '../context/userContext'
 import { Col, Container, Row } from 'react-bootstrap'
 import Navbar1 from './Navbar'
 import Class_Card from './Class_Card'
-import {Link, Redirect, useHistory} from 'react-router-dom'
 
 const HomePage = () => {
-    const [classes, setClasses] = useState([]);
-    const [user, setUser] = useContext(UserContext)
-    const hist = useHistory();
+    const [classes,setClasses] = useState([]);
 
     const fetchClasses = async () => {
         try{
@@ -20,45 +17,16 @@ const HomePage = () => {
             });
 
             const data = await res.json();
-            return data;
-        } catch (err) {
-            hist.push('/signup');
+            // console.log(data);
+            setClasses(data.classes);
+        }catch(err) {
             console.log(err);
         }
     }
 
-    const unenroll = async (id) => {
-        try {
-            let res = await fetch(`/class/unenroll/${id}`, { method: 'PATCH' });
-            res = await res.json();
-            if (!res.error) {
-                setClasses(prev => {
-                    return prev.filter(cls => cls.id !== id);
-                })
-                return;
-            }
-            throw res.error
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
     useEffect(() => {
-        fetchClasses().then(res => {
-            setClasses(res.classes);
-        });
+        fetchClasses();
     }, []);
-
-    useEffect(() => {
-    }, [classes])
-
-    const renderEmpty = () => {
-        return (
-            <div>
-                No classes available yet.
-            </div>
-        );
-    }
 
     return (
         <>
@@ -67,18 +35,15 @@ const HomePage = () => {
              <Row>
                  <Col className="mt-3">
                  <div className="d-flex justify-content-center align-items-center flex-wrap">
-                    {classes.length == 0 ? renderEmpty() : null}
-                    {classes.map((val,index) => 
+                    {classes.map((val,index) => {
                         <Class_Card
-                            key={index}
                             id = {val._id}
                             classname = {val.title}
-                            ClassCode = {val.subjectCode}
+                            ClassCode = {val.subjectcode}
                             link = {val.link}
-                            admin={val.admin.name}
-                            unenroll = {unenroll}
+                            admin = {val.admin}
                         />
-                    )
+                    })
                     }
                  </div>
                  </Col>

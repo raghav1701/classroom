@@ -1,5 +1,5 @@
 import React,{ useState, useContext } from 'react'
-import { NavLink, useHistory } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Col, Container, Row,Form,Button, Media, Image, Spinner } from 'react-bootstrap'
 import { MdAccountBox, MdEmail, MdLock } from "react-icons/md";
 import { FaChalkboardTeacher } from "react-icons/fa";
@@ -19,7 +19,6 @@ const SignUp = () => {
     const [err, setErr] = useState('');
 
     const [user, setUser] = useContext(UserContext)
-    const hist = useHistory();
 
     const onChangeHandler = (e) => {
         switch(e.target.name){
@@ -53,13 +52,14 @@ const SignUp = () => {
         }else{
             //if password matched
             fetchClassPosts().then(res => {
+                console.log(res);
                 if(!res.error){
                     setUser({
                         username: res.user.username,
                         email: res.user.email,
                         role: res.user.role
                     })
-                    hist.push('/')
+                    console.log(user);
                 }else{
                     setErr(res.error)
                 }

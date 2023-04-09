@@ -1,15 +1,62 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {Navbar,Modal,Button, Form,Nav} from 'react-bootstrap'
 import { AiOutlinePlus } from "react-icons/ai";
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 
 
 const Navbar1 = () => {
     const [modalShow, setModalShow] = useState(false);
-    const [modalShow1, setModalShow1] = useState(false);
-    
+  const [modalShow1, setModalShow1] = useState(false);
+  const hist = useHistory();
+  const [user, setUser] = useState({
+        _id: '',
+        email: '',
+        username: '',
+        role:''
+  });
+  
+  useEffect(() => {
+    const cookies = document.cookie.split(';');
+        cookies.forEach(cookie => {
+            let cook = decodeURI(cookie);
+            cook = cook.split('=').map(c => c.trim());
+            if (cook[0] === 'user') {
+                const temp = JSON.parse(decodeURIComponent(cook[1]));
+                setUser(() => {
+                    return {
+                        _id: temp._id,
+                        email: temp.email,
+                        username: temp.username,
+                        role:temp.role
+                    }
+                });
+            }
+        })
+  }, [])
+
+  useEffect(() => {
+    console.log(user);
+  }, [user])
+
+  
     function MyVerticallyCenteredModal(props) {
-        const [code,setCode] = useState('');
+      const [code, setCode] = useState('');
+      const [error, setError] = useState('');
+
+      const submit = async () => {
+        let res = await fetch(`/class/join/${code}`, {method: 'PATCH', headers: {
+            'Content-Type':'application/json'
+        }})
+        res = await res.json();
+        if (res.error) {
+          setError(res.error);
+        }
+        else {
+          props.onHide();
+          window.location.reload();
+        }
+      }
+
         return (
           <Modal
             {...props}
@@ -32,9 +79,10 @@ const Navbar1 = () => {
                 </Form.Group>
             </Form>
             </Modal.Body>
+            <p>{error}</p>
             <Modal.Footer>
               <Button variant="outline-danger" onClick={props.onHide}>Close</Button>
-              <Button variant="outline-success" onClick={props.onHide}>Submit</Button>
+              <Button variant="outline-success" onClick={submit}>Submit</Button>
             </Modal.Footer>
           </Modal>
         );
@@ -44,7 +92,32 @@ const Navbar1 = () => {
         const [name,setName] = useState('');
         const [subjectcode,setSubjectcode] = useState('');
         const [link,setLink] = useState('');
-        const [books,setBooks] = useState('');
+      const [books, setBooks] = useState('');
+      const [error, setError] = useState('');
+      
+      const submit = async () => {
+        let res = await fetch('/class', {
+          method: 'POST',
+          body: JSON.stringify({
+            title: name,
+            subjectCode: subjectcode,
+            books: books.split(','),
+            link: link,
+          }),
+          headers: {
+            'Content-Type':'application/json'
+          }
+        })
+
+        res = await res.json();
+        if (res.error) {
+          setError(res.error)
+        }
+        else {
+          props.onHide();
+          window.location.reload();
+        }
+      }
 
         return (
           <Modal
@@ -74,9 +147,10 @@ const Navbar1 = () => {
                 </Form.Group>
             </Form>
             </Modal.Body>
+            <p> {error} </p>
             <Modal.Footer>
               <Button variant="outline-danger" onClick={props.onHide}>Close</Button>
-              <Button variant="outline-success" onClick={props.onHide}>Submit</Button>
+              <Button variant="outline-success" onClick={submit}>Submit</Button>
             </Modal.Footer>
           </Modal>
         );
@@ -86,18 +160,11 @@ const Navbar1 = () => {
         <Navbar bg="light" className="nav" fixed="top">
             <NavLink to="/" className="nav-link" style={{color:"black", fontSize:"20px"}}>Classroom</NavLink>
             <Nav>
-                {/* For Students */}
-                <button className="navbtn" onClick={() => setModalShow(true)}><AiOutlinePlus style={{fontSize:"20px"}} /></button>
-                <MyVerticallyCenteredModal
-                    show={modalShow}
-                    onHide={() => setModalShow(false)}
-                />
-                {/* For Admin */}
-                <button className="navbtn" onClick={() => setModalShow1(true)}><AiOutlinePlus style={{fontSize:"20px"}} /></button>
-                <MyModal
-                    show={modalShow1}
-                    onHide={() => setModalShow1(false)}
-                />
+            
+                <button className="navbtn" onClick={() => { user.role === 'Student' ? setModalShow(true) : setModalShow1(true) }}><AiOutlinePlus style={{ fontSize: "20px" }} /></button>
+                <MyVerticallyCenteredModal show={modalShow} onHide={() => setModalShow(false)} />
+                <MyModal show={modalShow1} onHide={() => setModalShow1(false)} />
+                
                 <NavLink className="nav-link" style={{cursor:"pointer"}} to="/signin">SignIn</NavLink>
                 <NavLink className="nav-link" style={{cursor:"pointer"}} to="/signup">SignUp</NavLink>
                 <NavLink className="nav-link" style={{cursor:"pointer"}} to="/3">Logout</NavLink>
